@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pyd
+*.pyo
+*.pyd
+*.pyo
+*.coveragerc
+.coverage
+.coverage.*
+.pytest_cache/
+.pytest_cache
+.pyre/
+.pyre
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# IDEs / editors
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Logs
+*.log
+
+# Environment files
+.env
+
+# Local files
+*.sqlite3
+*.db
+
+# Build files
+build/
+dist/
+*.egg-info/
+
+# Static analysis
+.mypy_cache/
+.dmypy.json
+.pytype/
