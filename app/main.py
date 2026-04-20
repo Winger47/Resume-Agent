@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import pdfplumber
 import io
 from app.matcher import match_skills
-from app.extractor import extract_skills
+from app.extractor import  extract_skills_llm
 from app.ai_agent import get_suggestions
 from dotenv import load_dotenv
 
@@ -31,8 +31,8 @@ async def analyse(file: UploadFile = File(...), jd_text: str = Form(...)):
         text = ""
         for page in pdf.pages:
             text += page.extract_text() or ""
-    resume_skills = extract_skills(text)
-    jd_skills = extract_skills(jd_text)
+    resume_skills = extract_skills_llm(text)
+    jd_skills = extract_skills_llm(jd_text)
     match_result = match_skills(resume_skills, jd_skills)
     suggestions = get_suggestions(text, jd_text, match_result["missing"])
 

@@ -36,3 +36,4 @@ Give me 5 specific suggestions to improve my resume for this job."""
         ]
     )
     return response.choices[0].message.content
+
