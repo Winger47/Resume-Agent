@@ -8,6 +8,7 @@ from app.matcher import match_skills
 from app.extractor import  extract_skills_llm
 from app.ai_agent import get_suggestions
 from dotenv import load_dotenv
+from app.agent import run_agent
 
 load_dotenv()
 
@@ -42,7 +43,17 @@ async def analyse(file: UploadFile = File(...), jd_text: str = Form(...)):
         "missing_skills": match_result["missing"],
         "suggestions": suggestions
     }
+@app.post("/analyse_text/")
+async def analyse1(file: UploadFile = File(...), jd_text: str = Form(...)):
+    content = await file.read()
+    with pdfplumber.open(io.BytesIO(content)) as pdf:
+        text = ""
+        for page in pdf.pages:
+            text += page.extract_text() or ""
+    
+    suggestions = run_agent(text, jd_text)
 
+    return suggestions
 @app.get("/health")
 def health():
     return {"status": "ok"}

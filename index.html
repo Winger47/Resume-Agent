@@ -402,7 +402,7 @@
       formData.append('jd_text', jdText);
 
       try {
-        const res = await fetch('http://localhost:8000/analyse/', {
+        const res = await fetch('http://localhost:8000/analyse_text/', {
           method: 'POST',
           body: formData
         });
@@ -419,44 +419,25 @@
     }
 
     function renderResults(data) {
-      const score = data.score;
-      const isGreat = score >= 80;
+  if (data.result) {
+    document.getElementById('verdict').className = 'verdict improve';
+    document.getElementById('verdictIcon').textContent = '🤖';
+    document.getElementById('verdictTitle').textContent = 'Agent Analysis Complete';
+    document.getElementById('verdictSub').textContent = 'AI-powered analysis using agentic reasoning';
 
-      const verdict = document.getElementById('verdict');
-      verdict.className = 'verdict ' + (isGreat ? 'great' : 'improve');
+    document.getElementById('matchedSkills').innerHTML = '';
+    document.getElementById('missingSkills').innerHTML = '';
 
-      document.getElementById('verdictIcon').textContent = isGreat ? '🎉' : '📈';
-      document.getElementById('verdictTitle').textContent = isGreat ? 'Great fit!' : 'Needs improvement';
-      document.getElementById('verdictSub').textContent = isGreat
-        ? `You match ${score}% of the job requirements.`
-        : `You match ${score}% — improve using the suggestions below.`;
+    const lines = data.result.split('\n').filter(l => l.trim());
+    document.getElementById('suggestionsList').innerHTML = lines.map((line, i) =>
+      `<li><span class="suggestion-num">${i + 1}</span><span>${line}</span></li>`
+    ).join('');
 
-      document.getElementById('scoreNumber').textContent = score + '%';
-      const circle = document.getElementById('scoreCircle');
-      const circumference = 263.9;
-      circle.style.strokeDashoffset = circumference - (score / 100) * circumference;
-      circle.style.stroke = isGreat ? '#3B6D11' : '#BA7517';
-
-      const matched = document.getElementById('matchedSkills');
-      matched.innerHTML = data.matched_skills.map(s =>
-        `<span class="skill-chip chip-matched">${s}</span>`
-      ).join('');
-
-      const missing = document.getElementById('missingSkills');
-      missing.innerHTML = data.missing_skills.length
-        ? data.missing_skills.map(s => `<span class="skill-chip chip-missing">${s}</span>`).join('')
-        : '<span style="font-size:13px;color:#6b6b6b">None — you have all required skills!</span>';
-
-      const suggestions = document.getElementById('suggestionsList');
-      const lines = data.suggestions.split('\n').filter(l => l.trim());
-      suggestions.innerHTML = lines.map((line, i) => {
-        const text = line.replace(/^\d+\.\s*/, '');
-        return `<li><span class="suggestion-num">${i + 1}</span><span>${text}</span></li>`;
-      }).join('');
-
-      document.getElementById('results').style.display = 'block';
-      document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
-    }
+    document.getElementById('results').style.display = 'block';
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+    return;
+  }
+}
   </script>
 </body>
 </html>
